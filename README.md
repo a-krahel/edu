@@ -6,6 +6,9 @@
 
 ```bash
 $ yarn install
+
+# migration
+npx sequelize-cli db:migrate
 ```
 
 ## Running the app
