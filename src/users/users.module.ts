@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import configuration from '../config/app';
-import { JwtStrategy } from './jwt.statagy';
+import { JwtStrategy } from './jwt.stategy';
 import { UsersController } from './users.controller';
 import { Users } from './users.model';
 import { UsersService } from './users.service';
