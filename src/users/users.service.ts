@@ -56,6 +56,15 @@ export class UsersService {
       },
     });
     if (user && bcrypt.compare(password, user.password)) {
+      await this.usersModel.update(
+        { lastLogin: Date.now() },
+        {
+          where: {
+            email: email,
+          },
+        },
+      );
+
       const accessToken = this.jwtService.sign({ email }, configuration().jwt);
 
       return { accessToken };
