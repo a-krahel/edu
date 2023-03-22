@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,5 +37,10 @@ export class UsersController {
   @Post('/login')
   login(@Body() loginUserDto: LoginUserDto) {
     return this.userService.login(loginUserDto);
+  }
+
+  @Post('/activate/:code')
+  activate(@Param('code') code, @Headers('authorization') authorization) {
+    return this.userService.activate(code, authorization);
   }
 }

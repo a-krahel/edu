@@ -76,4 +76,18 @@ export class UsersService {
       return { accessToken };
     } else throw new UnauthorizedException();
   }
+
+  async activate(code, authorization) {
+    const payload = this.jwtService.decode(authorization.slice(7));
+    const email = payload['email'];
+
+    const user = await this.usersModel.findOne({ where: { email: email } });
+
+    const currentDate = new Date(Date.now());
+    const expiradeDate = new Date(user.expirationDate);
+
+    if (user.confirmationCode === code && expiradeDate > currentDate)
+      await this.usersModel.update({ isActive: true }, { where: { email } });
+    else throw new Error('Invalid or expired activation code');
+  }
 }
