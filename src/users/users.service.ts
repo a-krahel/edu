@@ -1,3 +1,5 @@
+import { randomBytes } from 'node:crypto';
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
@@ -35,17 +37,21 @@ export class UsersService {
       password,
       parseInt(process.env.SALT),
     );
-    const confirmationCode = await bcrypt.hash(email, 1);
+    const confirmationCode = randomBytes(30).toString('hex');
 
     const date = new Date(Date.now() + parseInt(process.env.JWT_LIFETIME));
     const expirationDate = date.toUTCString();
 
-    return this.usersModel.create({
-      confirmationCode: confirmationCode,
-      email: email,
-      expirationDate: expirationDate,
-      password: hashPassword,
-    });
+    try {
+      await this.usersModel.create({
+        confirmationCode: confirmationCode,
+        email: email,
+        expirationDate: expirationDate,
+        password: hashPassword,
+      });
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 
   async login(loginUserDto: LoginUserDto) {
