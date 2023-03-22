@@ -80,7 +80,9 @@ export class UsersService {
   }
 
   async activate(code, authorization) {
-    const user = await this.jwtStrategy.validate(authorization);
+    const payload = await this.jwtService.decode(authorization.slice(7));
+
+    const user = await this.jwtStrategy.validate({ email: payload['email'] });
 
     const currentDate = new Date(Date.now());
     const expiradeDate = new Date(user.expirationDate);

@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  exports: [JwtStrategy, PassportModule],
+  exports: [JwtStrategy, PassportModule, UsersService],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(configuration().jwt),
