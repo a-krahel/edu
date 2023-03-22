@@ -9,6 +9,7 @@ import * as process from 'process';
 import configuration from '../config/app';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtStrategy } from './jwt.stategy';
 import { Users } from './users.model';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class UsersService {
     @InjectModel(Users)
     private readonly usersModel: typeof Users,
     private jwtService: JwtService,
+    private jwtStrategy: JwtStrategy,
   ) {}
 
   async findAll() {
@@ -78,16 +80,16 @@ export class UsersService {
   }
 
   async activate(code, authorization) {
-    const payload = this.jwtService.decode(authorization.slice(7));
-    const email = payload['email'];
-
-    const user = await this.usersModel.findOne({ where: { email: email } });
+    const user = await this.jwtStrategy.validate(authorization);
 
     const currentDate = new Date(Date.now());
     const expiradeDate = new Date(user.expirationDate);
 
     if (user.confirmationCode === code && expiradeDate > currentDate)
-      await this.usersModel.update({ isActive: true }, { where: { email } });
+      await this.usersModel.update(
+        { isActive: true },
+        { where: { email: user.email } },
+      );
     else throw new Error('Invalid or expired activation code');
   }
 }
