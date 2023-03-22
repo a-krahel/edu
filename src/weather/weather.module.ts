@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 import { UsersModule } from '../users/users.module';
@@ -9,6 +10,6 @@ import { WeatherService } from './weather.service';
 @Module({
   controllers: [WeatherController],
   imports: [UsersModule, SequelizeModule.forFeature([Weather])],
-  providers: [WeatherService],
+  providers: [WeatherService, JwtService],
 })
 export class WeatherModule {}

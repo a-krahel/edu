@@ -10,7 +10,8 @@ export class Weather extends Model {
 
   @Column({ allowNull: false })
   longitude: number;
-  @Column({ allowNull: false })
+
+  @Column({ allowNull: false, defaultValue: Date.now() })
   date: Date;
 
   @Column({ allowNull: false })
