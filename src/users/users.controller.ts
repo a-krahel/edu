@@ -9,8 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { UserDataDto } from './dto/user-data.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -30,12 +29,12 @@ export class UsersController {
   }
 
   @Post('')
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: UserDataDto) {
     return this.userService.createUser(createUserDto);
   }
 
   @Post('/login')
-  login(@Body() loginUserDto: LoginUserDto) {
+  login(@Body() loginUserDto: UserDataDto) {
     return this.userService.login(loginUserDto);
   }
 

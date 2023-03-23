@@ -7,8 +7,7 @@ import * as bcrypt from 'bcrypt';
 import * as process from 'process';
 
 import configuration from '../config/app';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { UserDataDto } from './dto/user-data.dto';
 import { JwtStrategy } from './jwt.stategy';
 import { Users } from './users.model';
 
@@ -33,8 +32,8 @@ export class UsersService {
     });
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const { email, password } = createUserDto;
+  async createUser(userDataDto: UserDataDto) {
+    const { email, password } = userDataDto;
     const hashPassword = await bcrypt.hash(
       password,
       parseInt(process.env.SALT),
@@ -56,8 +55,8 @@ export class UsersService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
+  async login(userDataDto: UserDataDto) {
+    const { email, password } = userDataDto;
     const user = await this.usersModel.findOne({
       where: {
         email,
@@ -72,8 +71,10 @@ export class UsersService {
           },
         },
       );
-
-      const accessToken = this.jwtService.sign({ email }, configuration().jwt);
+      const accessToken = this.jwtService.sign(
+        { id: user.id },
+        configuration().jwt,
+      );
 
       return { accessToken };
     } else throw new UnauthorizedException();

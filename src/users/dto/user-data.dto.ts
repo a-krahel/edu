@@ -1,6 +1,6 @@
 import { Matches } from 'class-validator';
 
-export class LoginUserDto {
+export class UserDataDto {
   @Matches(
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
     { message: 'incorrect email format.' },

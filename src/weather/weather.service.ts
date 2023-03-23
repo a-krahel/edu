@@ -32,11 +32,9 @@ export class WeatherService {
   async getWeatherByUser(authorization) {
     const payload = await this.jwtService.decode(authorization.slice(7));
 
-    const user = await this.jwtStrategy.validate({ email: payload['email'] });
-
     return this.weatherModel.findAll({
       where: {
-        createdBy: user.id,
+        createdBy: payload['id'],
       },
     });
   }
@@ -44,8 +42,6 @@ export class WeatherService {
   async addWeather(weatherDto: WeatherDto, authorization) {
     const payload = await this.jwtService.decode(authorization.slice(7));
 
-    const user = await this.jwtStrategy.validate({ email: payload['email'] });
-
-    this.weatherModel.create({ ...weatherDto, createdBy: user.id });
+    this.weatherModel.create({ ...weatherDto, createdBy: payload['id'] });
   }
 }

@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(authorization) {
     const user = await this.usersModel.findOne({
       where: {
-        email: authorization['email'],
+        id: authorization['id'],
       },
     });
 
