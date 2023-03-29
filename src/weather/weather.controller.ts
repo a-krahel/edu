@@ -5,6 +5,7 @@ import {
   Headers,
   Param,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -24,8 +25,8 @@ export class WeatherController {
 
   @Get('/byUser')
   @UseGuards(AuthGuard())
-  getWeatherByUser(@Headers('authorization') authorization) {
-    return this.weatherService.getWeatherByUser(authorization);
+  getWeatherByUser(@Req() request) {
+    return this.weatherService.getWeatherByUser(request.body.id);
   }
 
   @Get('/:city')
@@ -36,10 +37,13 @@ export class WeatherController {
 
   @Post('')
   @UseGuards(AuthGuard())
-  addWeather(
-    @Body() weatherDto: WeatherDto,
-    @Headers('authorization') authorization,
-  ) {
-    return this.weatherService.addWeather(weatherDto, authorization);
+  addWeather(@Body() weatherDto: WeatherDto, @Req() request) {
+    return this.weatherService.addWeather(weatherDto, request.body.id);
+  }
+
+  //TODO: generate random date
+  @Post('/generate-new-data')
+  generateNewData() {
+    return this.weatherService.generateNewData();
   }
 }
