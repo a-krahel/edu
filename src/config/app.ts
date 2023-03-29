@@ -17,7 +17,6 @@ export default () => ({
   jwt: {
     expiresIn: parseInt(env.JWT_LIFETIME),
     secret: env.JWT_SECRET,
-    // signOptions: {},
   },
   port: parseInt(env.NODE_PORT) || 3000,
 });
