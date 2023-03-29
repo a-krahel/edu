@@ -1,5 +1,11 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import * as process from 'process';
 import { Dialect } from 'sequelize/types/sequelize';
@@ -7,8 +13,11 @@ import { Dialect } from 'sequelize/types/sequelize';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/app';
+import { IsActiveMiddleware } from './users/isActive.middleware';
+import { UsersController } from './users/users.controller';
 import { Users } from './users/users.model';
 import { UsersModule } from './users/users.module';
+import { WeatherController } from './weather/weather.controller';
 import { Weather } from './weather/weather.model';
 import { WeatherModule } from './weather/weather.module';
 
@@ -31,6 +40,16 @@ import { WeatherModule } from './weather/weather.module';
     UsersModule,
     WeatherModule,
   ],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(IsActiveMiddleware)
+      .exclude(
+        { method: RequestMethod.POST, path: 'users/(.*)' },
+        { method: RequestMethod.POST, path: 'weather/generate-new-data' },
+      )
+      .forRoutes(UsersController, WeatherController);
+  }
+}
