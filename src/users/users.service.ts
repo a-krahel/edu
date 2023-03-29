@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto';
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt';
@@ -62,7 +67,7 @@ export class UsersService {
         email,
       },
     });
-    if (user && bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       await this.usersModel.update(
         { lastLogin: Date.now() },
         {
@@ -77,14 +82,23 @@ export class UsersService {
       );
 
       return { accessToken };
-    } else throw new UnauthorizedException();
+    } else
+      throw new UnauthorizedException(
+        'Invalid email or password, please try again',
+      );
   }
 
-  async activate(code, authorization) {
-    const payload = await this.jwtService.decode(authorization.slice(7));
+  async activate(code) {
+    const user = await this.usersModel.findOne({
+      where: { confirmationCode: code },
+    });
 
-    const user = await this.jwtStrategy.validate({ email: payload['email'] });
-
+    //TODO: message, code 406?
+    if (!user)
+      throw new HttpException(
+        `User with this code was not found`,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     const currentDate = new Date(Date.now());
     const expiradeDate = new Date(user.expirationDate);
 
@@ -93,6 +107,11 @@ export class UsersService {
         { isActive: true },
         { where: { email: user.email } },
       );
-    else throw new Error('Invalid or expired activation code');
+    //TODO: 400?
+    else
+      throw new HttpException(
+        'Invalid or expired activation code',
+        HttpStatus.BAD_REQUEST,
+      );
   }
 }

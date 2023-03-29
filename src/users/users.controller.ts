@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { UserDataDto } from './dto/user-data.dto';
@@ -39,7 +31,7 @@ export class UsersController {
   }
 
   @Post('/activate/:code')
-  activate(@Param('code') code, @Headers('authorization') authorization) {
-    return this.userService.activate(code, authorization);
+  activate(@Param('code') code) {
+    return this.userService.activate(code);
   }
 }
