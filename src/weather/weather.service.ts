@@ -33,11 +33,11 @@ export class WeatherService {
     });
   }
 
-  async addWeather(weatherDto: WeatherDto, id) {
+  addWeather(weatherDto: WeatherDto, id) {
     this.weatherModel.create({ ...weatherDto, createdBy: id });
   }
 
-  async generateNewData() {
+  generateNewData() {
     this.weatherModel.create({
       city: randomBytes(6).toString('hex'),
       createdBy: 6,
