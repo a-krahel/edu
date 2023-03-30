@@ -47,6 +47,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(IsActiveMiddleware)
       .exclude(
+        { method: RequestMethod.POST, path: 'users' },
         { method: RequestMethod.POST, path: 'users/(.*)' },
         { method: RequestMethod.POST, path: 'weather/generate-new-data' },
       )

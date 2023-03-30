@@ -7,9 +7,9 @@ export class UserDataDto {
   )
   email: string;
 
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+  @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/, {
     message:
-      'incorrect format. Please provide minimum eight characters, at least one letter and one number',
+      'incorrect password format. Please provide minimum eight characters, at least one letter and one number',
   })
   password: string;
 }
