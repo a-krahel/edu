@@ -55,3 +55,10 @@ SALT=
 JWT_LIFETIME=
 JWT_SECRET=
 ```
+
+## Loadtest
+
+```bash
+#generate 100 records
+loadtest -n 100 -m POST http://localhost:8083/weather/generate-new-data
+```
