@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   Param,
   Post,
   Req,
@@ -41,7 +40,6 @@ export class WeatherController {
     return this.weatherService.addWeather(weatherDto, request.body.id);
   }
 
-  //TODO: generate random date
   @Post('/generate-new-data')
   generateNewData() {
     return this.weatherService.generateNewData();
