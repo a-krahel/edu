@@ -13,7 +13,6 @@ import * as process from 'process';
 
 import configuration from '../config/app';
 import { UserDataDto } from './dto/user-data.dto';
-import { JwtStrategy } from './jwt.stategy';
 import { Users } from './users.model';
 
 @Injectable()
@@ -22,7 +21,6 @@ export class UsersService {
     @InjectModel(Users)
     private readonly usersModel: typeof Users,
     private jwtService: JwtService,
-    private jwtStrategy: JwtStrategy,
   ) {}
 
   async findAll() {
@@ -93,10 +91,10 @@ export class UsersService {
       where: { confirmationCode: code },
     });
 
-    //TODO: message, code 406?
+    //TODO: 400
     if (!user)
       throw new HttpException(
-        `User with this code was not found`,
+        `Invalid confirmation code`,
         HttpStatus.NOT_ACCEPTABLE,
       );
     const currentDate = new Date(Date.now());
@@ -107,7 +105,6 @@ export class UsersService {
         { isActive: true },
         { where: { email: user.email } },
       );
-    //TODO: 400?
     else
       throw new HttpException(
         'Invalid or expired activation code',
