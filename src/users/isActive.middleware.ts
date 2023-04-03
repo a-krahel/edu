@@ -25,7 +25,7 @@ export class IsActiveMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Please activate your account to access');
     }
 
-    req.body = user.dataValues;
+    req.body = { email: user.dataValues.email, id: user.dataValues.id };
 
     next();
   }
