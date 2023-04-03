@@ -91,18 +91,17 @@ export class UsersService {
       where: { confirmationCode: code },
     });
 
-    //TODO: 400
     if (!user)
       throw new HttpException(
         `Invalid confirmation code`,
-        HttpStatus.NOT_ACCEPTABLE,
+        HttpStatus.BAD_REQUEST,
       );
     const currentDate = new Date(Date.now());
     const expiradeDate = new Date(user.expirationDate);
 
     if (user.confirmationCode === code && expiradeDate > currentDate)
       await this.usersModel.update(
-        { isActive: true },
+        { confirmationCode: '', isActive: true },
         { where: { email: user.email } },
       );
     else
