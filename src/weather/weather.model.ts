@@ -19,4 +19,7 @@ export class Weather extends Model {
 
   @Column({ allowNull: false })
   createdBy: number;
+
+  @Column({})
+  additionalText: string;
 }

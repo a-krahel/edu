@@ -39,6 +39,7 @@ export class WeatherService {
 
   generateNewData() {
     this.weatherModel.create({
+      additionalText: randomBytes(255).toString('hex'),
       city: randomBytes(6).toString('hex'),
       createdBy: 6,
       date: Date.now(),
