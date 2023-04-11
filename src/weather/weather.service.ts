@@ -1,16 +1,23 @@
 import { randomBytes } from 'node:crypto';
 
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Cache } from 'cache-manager';
+import { Op } from 'sequelize';
 
 import { WeatherDto } from './dto/weather.dto';
 import { Weather } from './weather.model';
 
 @Injectable()
 export class WeatherService {
+  /**
+   * @ignore
+   */
   constructor(
     @InjectModel(Weather)
     private weatherModel: typeof Weather,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   getAllWeatherData() {
@@ -25,14 +32,37 @@ export class WeatherService {
     });
   }
 
+  /**
+   * A method that fetches weather data from the current user with a given id. Example:
+   * @example
+   * const user = await WeatherService.getWeatherByUser(1);
+   * @param id An id of a user
+   * @returns A promise with the list of weather
+   */
+
+  // manual caching
   async getWeatherByUser(id) {
-    return this.weatherModel.findAll({
+    const value = await this.cacheManager.get(id);
+    if (value) return value;
+
+    const data = await this.weatherModel.findAll({
       where: {
         createdBy: id,
       },
     });
+
+    await this.cacheManager.set(id, data);
+
+    return data;
   }
 
+  /**
+   * A method that add weather data from the current user with a given id. Example:
+   * @example
+   * WeatherService.addWeather(city, latitude, longitude, date, temperature, createdBy, 1);
+   * @param id An id of a user
+   * @returns A promise with the list of weather
+   */
   addWeather(weatherDto: WeatherDto, id) {
     this.weatherModel.create({ ...weatherDto, createdBy: id });
   }

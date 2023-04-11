@@ -1,4 +1,5 @@
 import {
+  CacheModule,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -24,6 +25,7 @@ import { WeatherModule } from './weather/weather.module';
 @Module({
   controllers: [AppController],
   imports: [
+    CacheModule.register({ isGlobal: true, max: 1000, ttl: 10000 }),
     ConfigModule.forRoot({
       envFilePath: ['.env', '.development.env', '.local.env'],
       load: [configuration],
