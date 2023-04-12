@@ -25,7 +25,11 @@ import { WeatherModule } from './weather/weather.module';
 @Module({
   controllers: [AppController],
   imports: [
-    CacheModule.register({ isGlobal: true, max: 1000, ttl: 10000 }),
+    CacheModule.register({
+      isGlobal: true,
+      ...configuration().cache,
+    }),
+
     ConfigModule.forRoot({
       envFilePath: ['.env', '.development.env', '.local.env'],
       load: [configuration],

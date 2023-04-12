@@ -54,6 +54,11 @@ SALT=
 #JWT
 JWT_LIFETIME=
 JWT_SECRET=
+
+
+#cache
+CACHING_ITEMS=
+CACHING_TIME=
 ```
 
 ## Loadtest
@@ -61,4 +66,11 @@ JWT_SECRET=
 ```bash
 #generate 100 records
 loadtest -n 100 -m POST http://localhost:8083/weather/generate-new-data
+```
+
+## Documentation
+
+```bash
+#generate documentation
+yarn documentation:serve
 ```
