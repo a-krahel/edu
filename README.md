@@ -74,3 +74,19 @@ loadtest -n 100 -m POST http://localhost:8083/weather/generate-new-data
 #generate documentation
 yarn documentation:serve
 ```
+
+## DB backup
+
+```bash 
+#for backup
+pg_dump -Fc -h 127.0.0.1 -U username DBname -f BackupFileName.dump
+```
+
+## MongoDB
+
+```bash 
+#create db
+use edu
+
+
+```

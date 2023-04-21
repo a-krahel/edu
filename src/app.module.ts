@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
 import { SequelizeModule } from '@nestjs/sequelize';
 import * as process from 'process';
 import { Dialect } from 'sequelize/types/sequelize';
@@ -43,6 +44,9 @@ import { WeatherModule } from './weather/weather.module';
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
     }),
+    MongooseModule.forRoot(
+      'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0',
+    ),
     UsersModule,
     WeatherModule,
   ],
