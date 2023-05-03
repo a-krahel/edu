@@ -2,6 +2,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+Minimal NodeJS version is 16.17.0
+
+Minimal yarn version is 1.22.0
+
 ## Installation
 
 ```bash
