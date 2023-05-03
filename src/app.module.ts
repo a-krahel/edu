@@ -7,20 +7,15 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
 import { SequelizeModule } from '@nestjs/sequelize';
-import * as process from 'process';
-import { Dialect } from 'sequelize/types/sequelize';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/app';
 import { IsActiveMiddleware } from './users/isActive.middleware';
 import { UsersController } from './users/users.controller';
-import { Users } from './users/users.model';
 import { UsersModule } from './users/users.module';
 import { WeatherController } from './weather/weather.controller';
-import { Weather } from './weather/weather.model';
 import { WeatherModule } from './weather/weather.module';
 
 @Module({
@@ -35,18 +30,7 @@ import { WeatherModule } from './weather/weather.module';
       envFilePath: ['.env', '.development.env', '.local.env'],
       load: [configuration],
     }),
-    SequelizeModule.forRoot({
-      database: process.env.DB_DATABASE,
-      dialect: process.env.DB_DIALECT as Dialect,
-      host: process.env.DB_HOST,
-      models: [Users, Weather],
-      password: process.env.DB_PASSWORD,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER,
-    }),
-    MongooseModule.forRoot(
-      'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0',
-    ),
+    SequelizeModule.forRoot(configuration().database),
     UsersModule,
     WeatherModule,
   ],

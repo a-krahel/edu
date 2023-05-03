@@ -25,9 +25,11 @@ export class WeatherService {
   }
 
   getWeatherByCity(city) {
+    const find = "abc"
     return this.weatherModel.findAll({
       where: {
-        city,
+       additionalText: {[Op.like]: `%${find}%`},
+       city: {[Op.like]: `%${city}%`}
       },
     });
   }
@@ -71,7 +73,7 @@ export class WeatherService {
     this.weatherModel.create({
       additionalText: randomBytes(255).toString('hex'),
       city: randomBytes(6).toString('hex'),
-      createdBy: 6,
+      createdBy: 1,
       date: Date.now(),
       latitude: Math.round(Math.random() * 91 * 1000000) / 1000000,
       longitude: Math.round(Math.random() * 181 * 1000000) / 1000000,

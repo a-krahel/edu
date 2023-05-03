@@ -39,11 +39,11 @@ export class UsersService {
     const { email, password } = userDataDto;
     const hashPassword = await bcrypt.hash(
       password,
-      parseInt(process.env.SALT),
+      parseInt(configuration().bcrypt),
     );
     const confirmationCode = randomBytes(30).toString('hex');
 
-    const date = new Date(Date.now() + parseInt(process.env.JWT_LIFETIME));
+    const date = new Date(Date.now() + configuration().jwt.expiresIn);
     const expirationDate = date.toUTCString();
 
     try {
